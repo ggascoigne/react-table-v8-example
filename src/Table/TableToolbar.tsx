@@ -4,10 +4,9 @@ import CreateIcon from '@mui/icons-material/CreateOutlined'
 import DeleteIcon from '@mui/icons-material/DeleteOutline'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import ViewColumnsIcon from '@mui/icons-material/ViewColumn'
-import { Button, IconButton, Theme, Toolbar, Tooltip } from '@mui/material'
+import { Button, IconButton, Toolbar, Tooltip } from '@mui/material'
 import { RowData, Table } from '@tanstack/table-core'
 import { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react'
-import { makeStyles } from 'tss-react/mui'
 
 import { ColumnHidePage } from './ColumnHidePage'
 import { FilterPage } from './FilterPage'
@@ -15,29 +14,6 @@ import { FilterPage } from './FilterPage'
 export interface TableMouseEventHandler<T extends RowData> {
   (table: Table<T>): MouseEventHandler
 }
-
-export const useStyles = makeStyles()((theme: Theme) => ({
-  toolbar: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  leftButtons: {},
-  rightButtons: {},
-  leftIcons: {
-    '&:first-of-type': {
-      marginLeft: -12,
-    },
-  },
-  rightIcons: {
-    padding: 12,
-    marginTop: '-6px',
-    width: 48,
-    height: 48,
-    '&:last-of-type': {
-      marginRight: -12,
-    },
-  },
-}))
 
 interface ActionButton<T extends RowData> {
   table: Table<T>
@@ -69,23 +45,35 @@ export const SmallIconActionButton = <T extends RowData>({
   label,
   enabled = () => true,
   variant,
-}: ActionButton<T>) => {
-  const { classes, cx } = useStyles()
-  return (
-    <Tooltip title={label} aria-label={label}>
-      <span>
-        <IconButton
-          className={cx({ [classes.rightIcons]: variant === 'right', [classes.leftIcons]: variant === 'left' })}
-          onClick={onClick(table)}
-          disabled={!enabled(table)}
-          size='large'
-        >
-          {icon}
-        </IconButton>
-      </span>
-    </Tooltip>
-  )
-}
+}: ActionButton<T>) => (
+  <Tooltip title={label} aria-label={label}>
+    <span>
+      <IconButton
+        sx={[
+          variant === 'right' && {
+            padding: '12px',
+            marginTop: '-6px',
+            width: '48px',
+            height: '48px',
+            '&:last-of-type': {
+              marginRight: '-12px',
+            },
+          },
+          variant === 'left' && {
+            '&:first-of-type': {
+              marginLeft: '-12px',
+            },
+          },
+        ]}
+        onClick={onClick(table)}
+        disabled={!enabled(table)}
+        size='large'
+      >
+        {icon}
+      </IconButton>
+    </span>
+  </Tooltip>
+)
 
 export interface Command<T extends RowData> {
   label: string
@@ -113,11 +101,10 @@ export function TableToolbar<T extends RowData>({
   onRefresh,
 }: PropsWithChildren<TableToolbarProps<T>>): ReactElement | null {
   const { getAllColumns } = table
-  const { classes } = useStyles()
   const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined)
   const [columnsOpen, setColumnsOpen] = useState(false)
   const [filterOpen, setFilterOpen] = useState(false)
-  const hideableColumns = getAllColumns().filter((column) => !(column.id === '_selector'))
+  const hidableColumns = getAllColumns().filter((column) => !(column.id === '_selector'))
 
   const handleColumnsClick = useCallback(
     (event: MouseEvent) => {
@@ -143,8 +130,13 @@ export function TableToolbar<T extends RowData>({
 
   // toolbar with add, edit, delete, filter/search column select.
   return (
-    <Toolbar className={classes.toolbar}>
-      <div className={classes.leftButtons}>
+    <Toolbar
+      sx={{
+        display: 'flex',
+        justifyContent: 'space-between',
+      }}
+    >
+      <div>
         {onAdd && (
           <SmallIconActionButton<T>
             table={table}
@@ -199,7 +191,7 @@ export function TableToolbar<T extends RowData>({
           )
         })}
       </div>
-      <div className={classes.rightButtons}>
+      <div>
         <ColumnHidePage<T> table={table} onClose={handleClose} show={columnsOpen} anchorEl={anchorEl} />
         <FilterPage<T> table={table} onClose={handleClose} show={filterOpen} anchorEl={anchorEl} />
         {onRefresh && (
@@ -211,7 +203,7 @@ export function TableToolbar<T extends RowData>({
             variant='right'
           />
         )}
-        {hideableColumns.length > 1 && (
+        {hidableColumns.length > 1 && (
           <SmallIconActionButton<T>
             table={table}
             icon={<ViewColumnsIcon />}

@@ -3,27 +3,6 @@ import { Column } from '@tanstack/react-table'
 import type { Table as TableInstance } from '@tanstack/table-core'
 import { RowData } from '@tanstack/table-core'
 import { useCallback } from 'react'
-import { makeStyles } from 'tss-react/mui'
-
-const useStyles = makeStyles()({
-  filtersActiveLabel: {
-    color: '#998',
-    fontSize: '14px',
-    paddingRight: 10,
-  },
-  chipZone: {
-    padding: '18px 0 5px 10px',
-    width: '100%',
-  },
-  chipLabel: {
-    fontWeight: 500,
-    marginRight: 5,
-  },
-  filterChip: {
-    marginRight: 4,
-    color: '#222',
-  },
-})
 
 interface FilterChipBarProps<T extends RowData> {
   table: TableInstance<T>
@@ -40,8 +19,7 @@ interface FilterChipBarProps<T extends RowData> {
 // }
 
 export function FilterChipBar<T extends RowData>({ table }: FilterChipBarProps<T>) {
-  const { classes } = useStyles()
-  const { getAllColumns, getState } = table
+  const { getState } = table
   const { columnFilters } = getState()
 
   const handleDelete = useCallback((column: Column<T>) => {
@@ -51,21 +29,47 @@ export function FilterChipBar<T extends RowData>({ table }: FilterChipBarProps<T
   if (Object.keys(columnFilters).length === 0) return null
 
   return (
-    <Box className={classes.chipZone}>
-      <span className={classes.filtersActiveLabel}>Active filters:</span>
+    <Box
+      sx={{
+        padding: '18px 0 5px 10px',
+        width: '100%',
+      }}
+    >
+      <Box
+        component='span'
+        sx={{
+          color: '#998',
+          fontSize: '14px',
+          paddingRight: '10px',
+        }}
+      >
+        Active filters:
+      </Box>
       <>
         {columnFilters &&
-          getAllColumns().map((column) => {
+          table.getAllLeafColumns().map((column) => {
             const filter = columnFilters.find((f) => f.id === column.id)
             const value = filter?.value
+
             return (
-              value && (
+              value !== undefined && (
                 <Chip
-                  className={classes.filterChip}
+                  sx={{
+                    marginRight: '4px',
+                    color: '#222',
+                  }}
                   key={column.id}
                   label={
                     <>
-                      <span className={classes.chipLabel}>{column.columnDef.header as string}: </span>
+                      <Box
+                        component='span'
+                        sx={{
+                          fontWeight: 500,
+                          marginRight: '5px',
+                        }}
+                      >
+                        {column.columnDef.header as string}:{' '}
+                      </Box>
                       {column.getFilterValue()}
                     </>
                   }

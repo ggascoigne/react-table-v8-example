@@ -1,5 +1,4 @@
 import { Box, Checkbox, FormControlLabel, Popover, Typography } from '@mui/material'
-import { Column, Header, flexRender } from '@tanstack/react-table'
 import type { RowData, Table as TableInstance } from '@tanstack/table-core'
 import { ReactElement } from 'react'
 
@@ -12,30 +11,17 @@ interface ColumnHidePageProps<T extends RowData> {
 
 const id = 'popover-column-hide'
 
-const findHeaderForColumn = <T extends RowData>(column: Column<T, unknown>, table: TableInstance<T>) => {
-  let matched: Header<T, unknown> | undefined
-
-  table.getHeaderGroups().forEach((headerGroup) => {
-    headerGroup.headers.forEach((header) => {
-      if (header.column === column) {
-        matched = header
-      }
-    })
-  })
-  return matched
-}
-
 export function ColumnHidePage<T extends RowData>({
   table,
   anchorEl,
   onClose,
   show,
 }: ColumnHidePageProps<T>): ReactElement | null {
-  const hideableColumns = table.getAllLeafColumns().filter((column) => !(column.id === '_selector'))
-  const checkedCount = hideableColumns.reduce((acc, val) => acc + (val.getIsVisible() ? 0 : 1), 0)
-  const onlyOneOptionLeft = checkedCount + 1 >= hideableColumns.length
+  const hidableColumns = table.getAllLeafColumns().filter((column) => !(column.id === '_selector'))
+  const checkedCount = hidableColumns.reduce((acc, val) => acc + (val.getIsVisible() ? 0 : 1), 0)
+  const onlyOneOptionLeft = checkedCount + 1 >= hidableColumns.length
 
-  return hideableColumns.length > 1 ? (
+  return hidableColumns.length > 1 ? (
     <div>
       <Popover
         anchorEl={anchorEl}
@@ -67,13 +53,15 @@ export function ColumnHidePage<T extends RowData>({
               gridRowGap: 6,
             }}
           >
-            {hideableColumns.map((column) => (
+            {hidableColumns.map((column) => (
               <FormControlLabel
                 key={column.id}
                 control={<Checkbox value={`${column.id}`} disabled={column.getIsVisible() && onlyOneOptionLeft} />}
-                label={
-                  flexRender(column.columnDef.header, findHeaderForColumn(column, table)!.getContext()) as ReactElement
-                }
+                // note that this isn't really correct, but react-table removes invisible 
+                // headers, as such there's no way to get a valid context for a hidden column
+                // faking it leaves a header context that is still missing information needed to provide a valid
+                // interface.  This is at least predictable
+                label={column.columnDef.header as string}
                 checked={column.getIsVisible()}
                 onChange={column.getToggleVisibilityHandler()}
               />

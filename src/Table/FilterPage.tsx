@@ -1,39 +1,6 @@
-import { Button, Popover, Typography } from '@mui/material'
-import type {RowData, Table as TableInstance} from '@tanstack/table-core'
+import { Box, Button, Popover, Typography } from '@mui/material'
+import type { RowData, Table as TableInstance } from '@tanstack/table-core'
 import { FormEvent, ReactElement, useCallback } from 'react'
-import { makeStyles } from 'tss-react/mui'
-
-const useStyles = makeStyles()({
-  columnsPopOver: {
-    padding: 24,
-  },
-  filtersResetButton: {
-    top: 18,
-    right: 21,
-  },
-  popoverTitle: {
-    fontWeight: 500,
-    padding: '0 24px 24px 0',
-    textTransform: 'uppercase',
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 218px)',
-    '@media (max-width: 600px)': {
-      gridTemplateColumns: 'repeat(1, 180px)',
-    },
-    gridColumnGap: 24,
-    gridRowGap: 24,
-  },
-  cell: {
-    width: '100%',
-    display: 'inline-flex',
-    flexDirection: 'column',
-  },
-  hidden: {
-    display: 'none',
-  },
-})
 
 interface FilterPageProps<T extends RowData> {
   table: TableInstance<T>
@@ -42,13 +9,7 @@ interface FilterPageProps<T extends RowData> {
   show: boolean
 }
 
-export function FilterPage<T extends RowData>({
-  table,
-  anchorEl,
-  onClose,
-  show,
-}: FilterPageProps<T>): ReactElement {
-  const { classes } = useStyles()
+export function FilterPage<T extends RowData>({ table, anchorEl, onClose, show }: FilterPageProps<T>): ReactElement {
   const { setColumnFilters } = table
 
   const allColumns = table
@@ -84,29 +45,66 @@ export function FilterPage<T extends RowData>({
           horizontal: 'right',
         }}
       >
-        <div className={classes.columnsPopOver}>
-          <Typography className={classes.popoverTitle}>Filters</Typography>
+        <Box
+          sx={{
+            padding: '24px',
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: 500,
+              padding: '0 24px 24px 0',
+              textTransform: 'uppercase',
+            }}
+          >
+            Filters
+          </Typography>
           <form onSubmit={onSubmit}>
             <Button
-              className={classes.filtersResetButton}
+              sx={{
+                top: '18px',
+                right: '21px',
+              }}
               color='primary'
               onClick={resetFilters}
               style={{ position: 'absolute' }}
             >
               Reset
             </Button>
-            <div className={classes.grid}>
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 218px)',
+                '@media (max-width: 600px)': {
+                  gridTemplateColumns: 'repeat(1, 180px)',
+                },
+                gridColumnGap: '24px',
+                gridRowGap: '24px',
+              }}
+            >
               {allColumns.map((column) => (
-                <div key={column.id} className={classes.cell}>
+                <Box
+                  key={column.id}
+                  sx={{
+                    width: '100%',
+                    display: 'inline-flex',
+                    flexDirection: 'column',
+                  }}
+                >
                   {column.columnDef.meta?.filterRender?.({ table, column })}
-                </div>
+                </Box>
               ))}
-            </div>
-            <Button className={classes.hidden} type='submit'>
+            </Box>
+            <Button
+              sx={{
+                display: 'none',
+              }}
+              type='submit'
+            >
               &nbsp;
             </Button>
           </form>
-        </div>
+        </Box>
       </Popover>
     </div>
   )
