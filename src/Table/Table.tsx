@@ -19,13 +19,14 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { FilterRenderProps } from '@tanstack/table-core'
+import { FilterRenderProps, getExpandedRowModel, getGroupedRowModel } from '@tanstack/table-core'
 import React, { CSSProperties, MouseEventHandler, ReactElement, useCallback, useEffect, useMemo } from 'react'
+import { css } from '@mui/material/styles'
+import { css as emotionCss } from '@emotion/css'
 
 import { camelToWords, isDev, useDebounce } from '../utils'
 import { FilterChipBar } from './FilterChipBar'
 import { fuzzyTextFilter, numericTextFilter } from './filters'
-import { ResizeHandle } from './ResizeHandle'
 import { TableDebug, TableDebugButton } from './TableDebug'
 import { TablePagination } from './TablePagination'
 import {
@@ -39,11 +40,12 @@ import {
   TableLabel,
   TableRow,
   TableTable,
-  useStyles,
+  ResizeHandle,
 } from './TableStyles'
 import { Command, TableToolbar } from './TableToolbar'
 import { TooltipCellRenderer } from './TooltipCell'
 import { useInitialTableState } from './useInitialTableState'
+import classnames from 'classnames'
 
 export type TableProps<T extends RowData> = Partial<TableOptions<T>> &
   Pick<TableOptions<T>, 'columns' | 'data'> & {
@@ -95,6 +97,15 @@ function DefaultColumnFilter<T extends RowData>({ table, column }: FilterRenderP
   )
 }
 
+const sortStyles = {
+  iconDirectionAsc: {
+    transform: 'rotate(90deg)',
+  },
+  iconDirectionDesc: {
+    transform: 'rotate(180deg)',
+  },
+}
+
 const DEFAULT_PAGE_SIZE = 25
 
 export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
@@ -109,8 +120,6 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
     onRefresh,
     initialState: userInitialState = {},
   } = props
-
-  const { classes, cx } = useStyles()
 
   const selectionColumn = useMemo<ColumnDef<T>>(
     () => ({
@@ -147,8 +156,8 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
 
   const defaultColumn = useMemo<Partial<ColumnDef<T>>>(
     () => ({
-      enableResizing: false,
-      enableGrouping: false,
+      enableResizing: true,
+      enableGrouping: true,
       meta: {
         filterRender: DefaultColumnFilter,
       },
@@ -156,9 +165,8 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
       header: DefaultHeader,
       aggregationFn: 'uniqueCount',
       aggregatedCell: ({ getValue }: CellContext<T, unknown>) => <>{getValue()} Unique Values</>,
-      minSize: 30,
-      size: 150,
-      maxSize: 200,
+      minSize: 50,
+      size: 200,
     }),
     []
   )
@@ -185,9 +193,11 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
     enableColumnResizing: true,
     columnResizeMode: 'onChange',
     getCoreRowModel: getCoreRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
+    getGroupedRowModel: getGroupedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   })
 
   const debouncedState = useDebounce(table.getState(), 500)
@@ -207,35 +217,56 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
     [onClick]
   )
 
+  const headerGroups = table.getHeaderGroups()
+  const rows = table.getRowModel().rows
+
   return (
     <>
       <TableToolbar table={table} {...{ onAdd, onDelete, onEdit, extraCommands, onRefresh }} />
       <FilterChipBar<T> table={table} />
       <TableTable>
         <TableHead>
-          {table.getHeaderGroups().map((headerGroup) => {
+          {headerGroups.map((headerGroup) => {
             return (
               <TableHeadRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map((header, headerIndex) => {
                   const style = {
-                    textAlign: header.column.columnDef?.meta?.align || 'left ',
+                    display: 'flex',
+                    justifyContent: header.column.columnDef?.meta?.align === 'right' ? 'flex-end' : 'flex-start',
                   } as CSSProperties
 
                   return (
                     <TableHeadCell
                       key={header.id}
                       colSpan={header.colSpan}
-                      style={{ position: 'relative', width: header.getSize() }}
+                      sx={[
+                        {
+                          position: 'relative',
+                          width: header.getSize(),
+                        },
+                        headerIndex + 1 === headerGroup.headers.length && {
+                          flex: '1 1 auto',
+                        },
+                        style,
+                      ]}
                     >
                       {header.isPlaceholder ? null : (
                         <>
-                          {header.column.getCanGroup() && (
+                          {/* I only want the leaves of columns to show grouping */}
+                          {header.column.getCanGroup() && headerGroup.depth + 1 === headerGroups.length && (
                             <Tooltip title={'Toggle Grouping'}>
                               <TableSortLabel
                                 active
                                 direction={header.column.getIsGrouped() ? 'desc' : 'asc'}
                                 IconComponent={KeyboardArrowRight}
-                                className={classes.headerIcon}
+                                sx={{
+                                  '& svg': {
+                                    width: '16px',
+                                    height: '16px',
+                                    marginRight: 0,
+                                    marginLeft: '-4px',
+                                  },
+                                }}
                                 onClick={header.column.getToggleGroupingHandler()}
                               />
                             </Tooltip>
@@ -246,16 +277,20 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
                                 active={!!header.column.getIsSorted()}
                                 direction={header.column.getIsSorted() || 'asc'}
                                 onClick={header.column.getToggleSortingHandler()}
-                                className={classes.tableSortLabel}
-                                style={style}
+                                sx={{
+                                  '& svg': {
+                                    width: '16px',
+                                    height: '16px',
+                                    marginTop: 0,
+                                    marginLeft: '2px',
+                                  },
+                                }}
                               >
                                 {flexRender(header.column.columnDef.header, header.getContext())}
                               </TableSortLabel>
                             </Tooltip>
                           ) : (
-                            <TableLabel style={style}>
-                              {flexRender(header.column.columnDef.header, header.getContext())}
-                            </TableLabel>
+                            <TableLabel>{flexRender(header.column.columnDef.header, header.getContext())}</TableLabel>
                           )}
                         </>
                       )}
@@ -268,24 +303,37 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
           })}
         </TableHead>
         <TableBody>
-          {table.getRowModel().rows.map((row) => {
+          {rows.map((row) => {
+            const cells = row.getVisibleCells()
             return (
-              <TableRow key={row.id} className={cx({ rowSelected: row.getIsSelected(), clickable: !!onClick })}>
-                {row.getVisibleCells().map((cell) => {
+              <TableRow key={row.id} className={classnames({ rowSelected: row.getIsSelected(), clickable: !!onClick })}>
+                {cells.map((cell, cellIndex) => {
                   return (
-                    <TableCell key={cell.id} onClick={cellClickHandler(cell)} style={{ width: cell.column.getSize() }}>
+                    <TableCell
+                      key={cell.id}
+                      onClick={cellClickHandler(cell)}
+                      style={{
+                        width: cell.column.getSize(),
+                        flex: cellIndex + 1 === cells.length ? '1 1 auto' : undefined,
+                      }}
+                    >
                       {cell.getIsGrouped() ? (
                         <>
                           <TableSortLabel
                             classes={{
-                              iconDirectionAsc: classes.iconDirectionAsc,
-                              iconDirectionDesc: classes.iconDirectionDesc,
+                              iconDirectionAsc: emotionCss(css(sortStyles.iconDirectionAsc).styles),
+                              iconDirectionDesc: emotionCss(css(sortStyles.iconDirectionDesc).styles),
                             }}
                             active
                             direction={row.getIsExpanded() ? 'desc' : 'asc'}
                             IconComponent={KeyboardArrowUp}
                             onClick={row.getToggleExpandedHandler()}
-                            className={classes.cellIcon}
+                            sx={{
+                              '& svg': {
+                                width: '16px',
+                                height: '16px',
+                              },
+                            }}
                           />
                           {flexRender(cell.column.columnDef.cell, cell.getContext())} ({row.subRows.length})
                         </>

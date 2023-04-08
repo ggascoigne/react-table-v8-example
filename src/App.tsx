@@ -2,7 +2,7 @@ import { Button, CssBaseline, InputLabel, MenuItem, TextField } from '@mui/mater
 import {
   AggregationFn,
   CellContext,
-  ColumnDef,
+  createColumnHelper,
   FilterFn,
   FilterRenderProps,
   Row,
@@ -203,48 +203,46 @@ function NumberRangeColumnFilter({
   )
 }
 
-const columns: ColumnDef<Person>[] = [
-  {
+const columnHelper = createColumnHelper<Person>()
+
+const columns = [
+  columnHelper.group({
     header: 'Name',
     columns: [
-      {
+      columnHelper.accessor('firstName', {
         header: 'First Name',
-        accessorKey: 'firstName',
         aggregationFn: 'count',
         aggregatedCell: ({ getValue }: CellContext<Person, unknown>) => `${getValue()} Names`,
-      },
-      {
+      }),
+      columnHelper.accessor('lastName', {
         header: 'Last Name',
-        accessorKey: 'lastName',
         aggregationFn: 'uniqueCount',
         filterFn: fuzzyTextFilter,
         aggregatedCell: ({ getValue }: CellContext<Person, unknown>) => `${getValue()} Unique Names`,
-      },
+      }),
     ],
-  },
-  {
+  }),
+  columnHelper.group({
     header: 'Info',
     columns: [
-      {
+      columnHelper.accessor('age', {
         header: 'Age',
-        accessorKey: 'age',
-        size: 50,
-        minSize: 50,
+        size: 120,
+        minSize: 80,
         filterFn: 'equals',
         aggregationFn: 'mean',
         enableGrouping: false,
         enableSorting: false,
         aggregatedCell: ({ getValue }: CellContext<Person, unknown>) => `${getValue()} (avg)`,
         meta: {
-          aligns: 'right', // todo should be align
+          align: 'right',
           filterRender: SliderColumnFilter,
         },
-      },
-      {
+      }),
+      columnHelper.accessor('visits', {
         header: 'Visits',
-        accessorKey: 'visits',
-        size: 50,
-        minSize: 50,
+        size: 120,
+        minSize: 100,
         filterFn: 'inNumberRange',
         aggregationFn: 'sum',
         aggregatedCell: ({ getValue }: CellContext<Person, unknown>) => `${getValue()} (total)`,
@@ -252,28 +250,26 @@ const columns: ColumnDef<Person>[] = [
           align: 'right',
           filterRender: NumberRangeColumnFilter,
         },
-      },
-      {
+      }),
+      columnHelper.accessor('status', {
         header: 'Status',
-        accessorKey: 'status',
         filterFn: 'includesString',
         meta: {
           filterRender: SelectColumnFilter,
         },
-      },
-      {
+      }),
+      columnHelper.accessor('progress', {
         header: 'Profile Progress',
-        accessorKey: 'progress',
         filterFn: filterGreaterThan,
         aggregationFn: roundedMedian,
         aggregatedCell: ({ getValue }: CellContext<Person, unknown>) => `${getValue()} (med)`,
         meta: {
           filterRender: SliderColumnFilter,
         },
-      },
-    ] as ColumnDef<Person>[],
-  },
-] //.flatMap((c:any)=>c.columns) // remove comment to drop header groups
+      }),
+    ],
+  }),
+] // .flatMap((c:any)=>c.columns) // remove comment to drop header groups
 
 const App: React.FC = () => {
   const [data] = React.useState<Person[]>(() => makeData(100))
