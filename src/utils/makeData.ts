@@ -18,26 +18,24 @@ const range = (len: number) => {
   return arr
 }
 
-const newPerson = (): Person => {
-  return {
-    firstName: faker.name.firstName(),
-    lastName: faker.name.lastName(),
-    age: faker.datatype.number(40),
-    visits: faker.datatype.number(1000),
-    progress: faker.datatype.number(100),
-    status: faker.helpers.shuffle<Person['status']>(['relationship', 'complicated', 'single'])[0]!,
-  }
-}
+const newPerson = (): Person => ({
+  firstName: faker.name.firstName(),
+  lastName: faker.name.lastName(),
+  age: faker.datatype.number(40),
+  visits: faker.datatype.number(1000),
+  progress: faker.datatype.number(100),
+  status: faker.helpers.shuffle<Person['status']>(['relationship', 'complicated', 'single'])[0]!,
+})
 
 export function makeData(...lens: number[]): Person[] {
   const makeDataLevel = (depth = 0): Person[] => {
     const len = lens[depth]!
-    return range(len).map((d): Person => {
-      return {
+    return range(len).map(
+      (_): Person => ({
         ...newPerson(),
         subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
-      }
-    })
+      })
+    )
   }
 
   return makeDataLevel()

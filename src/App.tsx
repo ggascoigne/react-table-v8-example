@@ -1,3 +1,5 @@
+import React, { useCallback } from 'react'
+
 import { Button, CssBaseline, InputLabel, MenuItem, TextField } from '@mui/material'
 import {
   AggregationFn,
@@ -8,7 +10,6 @@ import {
   Row,
   Table as TableInstance,
 } from '@tanstack/react-table'
-import React, { useCallback } from 'react'
 
 import { Page } from './Page'
 import { Table } from './Table'
@@ -17,14 +18,14 @@ import { makeData, Person } from './utils'
 
 const roundedMedian: AggregationFn<any> = (columnId, leafRows) => {
   if (!leafRows.length) {
-    return
+    return 0
   }
 
   let min = 0
   let max = 0
 
   leafRows.forEach((row) => {
-    let value = row.getValue(columnId)
+    const value = row.getValue(columnId)
     if (typeof value === 'number') {
       min = Math.min(min, value)
       max = Math.max(max, value)
@@ -50,11 +51,11 @@ function SelectColumnFilter({
   table: { getPreFilteredRowModel },
 }: FilterRenderProps<Person>) {
   const options = React.useMemo(() => {
-    const options = new Set<any>()
+    const _options = new Set<any>()
     getPreFilteredRowModel().flatRows.forEach((row) => {
-      options.add(row.getValue(id))
+      _options.add(row.getValue(id))
     })
-    return [...Array.from(options.values())]
+    return [...Array.from(_options.values())]
   }, [id, getPreFilteredRowModel])
   const columnFilterValue = getFilterValue()
 
@@ -68,7 +69,7 @@ function SelectColumnFilter({
       }}
       variant='standard'
     >
-      <MenuItem value={''}>All</MenuItem>
+      <MenuItem value=''>All</MenuItem>
       {options.map((option, i) => (
         <MenuItem key={i} value={option}>
           {option}
@@ -290,7 +291,7 @@ const App: React.FC = () => {
   return (
     <Page>
       <CssBaseline />
-      <Table<Person> name={'testTable'} columns={columns} data={data} onAdd={dummy} onEdit={dummy} onDelete={dummy} />
+      <Table<Person> name='testTable' columns={columns} data={data} onAdd={dummy} onEdit={dummy} onDelete={dummy} />
     </Page>
   )
 }

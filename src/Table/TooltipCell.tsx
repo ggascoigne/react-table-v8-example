@@ -1,12 +1,7 @@
-import { Tooltip } from '@mui/material'
-import { CellContext, RowData } from '@tanstack/table-core'
 import React, { CSSProperties, useRef, useState } from 'react'
 
-export const TooltipCellRenderer = <T extends RowData>(props: CellContext<T, unknown>) => {
-  const { cell, column } = props
-  const { align = 'left' } = column.columnDef.meta || {}
-  return <TooltipCell text={cell.getValue() as string} align={align} />
-}
+import { Tooltip } from '@mui/material'
+import { CellContext, RowData } from '@tanstack/table-core'
 
 interface TooltipCellProps {
   text: string
@@ -41,4 +36,10 @@ export const TooltipCell: React.FC<TooltipCellProps> = ({ text = '', tooltip = t
       </span>
     </Tooltip>
   )
+}
+
+export const TooltipCellRenderer = <T extends RowData>(props: CellContext<T, unknown>) => {
+  const { cell, column } = props
+  const { align = 'left' } = column.columnDef.meta ?? {}
+  return <TooltipCell text={cell.getValue() as string} align={align} />
 }
