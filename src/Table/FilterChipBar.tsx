@@ -1,8 +1,9 @@
+import { useCallback } from 'react'
+
 import { Box, Chip } from '@mui/material'
 import { Column } from '@tanstack/react-table'
 import type { Table as TableInstance } from '@tanstack/table-core'
 import { RowData } from '@tanstack/table-core'
-import { useCallback } from 'react'
 
 interface FilterChipBarProps<T extends RowData> {
   table: TableInstance<T>

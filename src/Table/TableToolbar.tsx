@@ -1,3 +1,5 @@
+import { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react'
+
 import AddIcon from '@mui/icons-material/Add'
 import CachedIcon from '@mui/icons-material/Cached'
 import CreateIcon from '@mui/icons-material/CreateOutlined'
@@ -6,7 +8,6 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 import ViewColumnsIcon from '@mui/icons-material/ViewColumn'
 import { Button, IconButton, Toolbar, Tooltip } from '@mui/material'
 import { RowData, Table } from '@tanstack/table-core'
-import { MouseEvent, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useState } from 'react'
 
 import { ColumnHidePage } from './ColumnHidePage'
 import { FilterPage } from './FilterPage'
@@ -143,7 +144,7 @@ export function TableToolbar<T extends RowData>({
             icon={<AddIcon />}
             onClick={onAdd}
             label='Add'
-            enabled={(table: Table<T>) => !table.getIsSomeRowsSelected()}
+            enabled={(t: Table<T>) => !t.getIsSomeRowsSelected()}
             variant='left'
           />
         )}
@@ -163,7 +164,7 @@ export function TableToolbar<T extends RowData>({
             icon={<DeleteIcon />}
             onClick={onDelete}
             label='Delete'
-            enabled={(table: Table<T>) => table.getIsSomeRowsSelected()}
+            enabled={(t: Table<T>) => t.getIsSomeRowsSelected()}
             variant='left'
           />
         )}

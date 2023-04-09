@@ -1,7 +1,8 @@
+import React, { Suspense } from 'react'
+
 import BugReportTwoToneIcon from '@mui/icons-material/BugReportTwoTone'
 import { IconButton, Tooltip } from '@mui/material'
 import { atom, useAtom } from 'jotai'
-import React, { Suspense } from 'react'
 
 import { Loader } from '../Loader'
 

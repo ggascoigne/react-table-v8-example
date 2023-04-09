@@ -1,6 +1,7 @@
+import { FormEvent, ReactElement, useCallback } from 'react'
+
 import { Box, Button, Popover, Typography } from '@mui/material'
 import type { RowData, Table as TableInstance } from '@tanstack/table-core'
-import { FormEvent, ReactElement, useCallback } from 'react'
 
 interface FilterPageProps<T extends RowData> {
   table: TableInstance<T>

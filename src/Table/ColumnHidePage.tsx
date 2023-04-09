@@ -1,6 +1,7 @@
+import { ReactElement } from 'react'
+
 import { Box, Checkbox, FormControlLabel, Popover, Typography } from '@mui/material'
 import type { RowData, Table as TableInstance } from '@tanstack/table-core'
-import { ReactElement } from 'react'
 
 interface ColumnHidePageProps<T extends RowData> {
   table: TableInstance<T>
@@ -57,7 +58,7 @@ export function ColumnHidePage<T extends RowData>({
               <FormControlLabel
                 key={column.id}
                 control={<Checkbox value={`${column.id}`} disabled={column.getIsVisible() && onlyOneOptionLeft} />}
-                // note that this isn't really correct, but react-table removes invisible 
+                // note that this isn't really correct, but react-table removes invisible
                 // headers, as such there's no way to get a valid context for a hidden column
                 // faking it leaves a header context that is still missing information needed to provide a valid
                 // interface.  This is at least predictable

@@ -1,7 +1,8 @@
+import { useCallback, useMemo } from 'react'
+
 import { ColumnDef, TableState } from '@tanstack/react-table'
 import { RowData } from '@tanstack/table-core'
 import { dequal as deepEqual } from 'dequal'
-import { useCallback, useMemo } from 'react'
 
 import { useLocalStorage } from '../utils'
 

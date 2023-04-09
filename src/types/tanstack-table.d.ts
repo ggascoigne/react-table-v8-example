@@ -1,6 +1,6 @@
-import {RowData, Table } from '@tanstack/table-core'
+import { Column } from '@tanstack/react-table'
+import { RowData, Table } from '@tanstack/table-core'
 import { Property } from 'csstype'
-import {Column} from "@tanstack/react-table";
 
 declare module '@tanstack/table-core' {
   interface FilterRenderProps<T extends RowData> {
