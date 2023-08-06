@@ -23,7 +23,7 @@ export function FilterPage<T extends RowData>({ table, anchorEl, onClose, show }
       e.preventDefault()
       onClose()
     },
-    [onClose]
+    [onClose],
   )
 
   const resetFilters = useCallback(() => {
@@ -34,7 +34,7 @@ export function FilterPage<T extends RowData>({ table, anchorEl, onClose, show }
     <div>
       <Popover
         anchorEl={anchorEl}
-        id='popover-filters'
+        id="popover-filters"
         onClose={onClose}
         open={show}
         anchorOrigin={{
@@ -66,7 +66,7 @@ export function FilterPage<T extends RowData>({ table, anchorEl, onClose, show }
                 top: '18px',
                 right: '21px',
               }}
-              color='primary'
+              color="primary"
               onClick={resetFilters}
               style={{ position: 'absolute' }}
             >
@@ -100,7 +100,7 @@ export function FilterPage<T extends RowData>({ table, anchorEl, onClose, show }
               sx={{
                 display: 'none',
               }}
-              type='submit'
+              type="submit"
             >
               &nbsp;
             </Button>

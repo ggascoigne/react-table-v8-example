@@ -17,14 +17,14 @@ interface PersistedState {
 export const useInitialTableState = <T extends RowData>(
   name: string,
   columns: ReadonlyArray<ColumnDef<T>>,
-  userInitialState: Partial<TableState>
+  userInitialState: Partial<TableState>,
 ) => {
   const createdFor = useMemo(
     () => ({
       columns: columns.map((c) => c.id).join(','),
       initialState: userInitialState,
     }),
-    [columns, userInitialState]
+    [columns, userInitialState],
   )
 
   const [initialState, setInitialState] = useLocalStorage<PersistedState>(name, {
@@ -58,7 +58,7 @@ export const useInitialTableState = <T extends RowData>(
         },
       })
     },
-    [createdFor, setInitialState]
+    [createdFor, setInitialState],
   )
   const value = deepEqual(initialState.createdFor, createdFor) ? initialState.value : userInitialState
 

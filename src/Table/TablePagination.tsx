@@ -44,25 +44,25 @@ function TablePaginationActions(props: TablePaginationActionsProps) {
         ml: 2.5,
       }}
     >
-      <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label='first page' size='large'>
+      <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label="first page" size="large">
         {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
       </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label='previous page' size='large'>
+      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page" size="large">
         {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label='next page'
-        size='large'
+        aria-label="next page"
+        size="large"
       >
         {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label='last page'
-        size='large'
+        aria-label="last page"
+        size="large"
       >
         {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
       </IconButton>
@@ -78,13 +78,13 @@ export function TablePagination<T extends RowData>({ table }: { table: TableInst
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
       table.setPageIndex(newPage)
     },
-    [table]
+    [table],
   )
 
   return rowCount ? (
     <MuiTablePagination
       rowsPerPageOptions={[10, 25, 50, 100]}
-      component='div'
+      component="div"
       count={rowCount}
       rowsPerPage={pageSize}
       page={pageIndex}

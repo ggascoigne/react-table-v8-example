@@ -48,7 +48,7 @@ const useStyleToClassName = <T extends Record<string, any>>(styles: T) => {
       const className = css(styles[styleName](theme))
       return emotionCss(className.styles)
     },
-    [styles, theme]
+    [styles, theme],
   )
 }
 
@@ -66,7 +66,7 @@ interface CN {
 
 export const TableTable: React.FC<Partial<TableTypeMap> & CN> = ({ children, sx, ...rest }) => (
   <MuiTableTable
-    component='div'
+    component="div"
     sx={[
       {
         borderSpacing: 0,
@@ -86,8 +86,8 @@ export const TableTable: React.FC<Partial<TableTypeMap> & CN> = ({ children, sx,
 
 export const TableBody: React.FC<Partial<TableBodyTypeMap> & CN> = ({ children, sx, ...rest }) => (
   <MuiTableBody
-    component='div'
-    role='table'
+    component="div"
+    role="table"
     sx={[
       {
         width: '100%',
@@ -102,8 +102,8 @@ export const TableBody: React.FC<Partial<TableBodyTypeMap> & CN> = ({ children, 
 
 export const TableHead: React.FC<Partial<TableHeadTypeMap> & CN> = ({ children, sx, ...rest }) => (
   <MuiTableHead
-    component='div'
-    role='rowgroup'
+    component="div"
+    role="rowgroup"
     sx={[
       { width: '100%', flex: '1 1 auto', display: 'flex', flexDirection: 'column' },
       ...(Array.isArray(sx) ? sx : [sx]),
@@ -119,8 +119,8 @@ export const TableHeadRow: React.FC<Partial<TableRowTypeMap> & CN> = ({ children
 
   return (
     <MuiTableRow
-      component='div'
-      role='row'
+      component="div"
+      role="row"
       sx={[
         (theme) => ({
           outline: 0,
@@ -147,8 +147,8 @@ export const TableHeadRow: React.FC<Partial<TableRowTypeMap> & CN> = ({ children
 
 export const TableHeadCell: React.FC<Partial<TableCellProps> & CN> = ({ children, sx, ...rest }) => (
   <MuiTableCell
-    component='div'
-    role='columnheader'
+    component="div"
+    role="columnheader"
     sx={[
       (theme) => ({
         fontSize: '0.875rem',
@@ -172,8 +172,8 @@ export const TableHeadCell: React.FC<Partial<TableCellProps> & CN> = ({ children
 
 export const TableRow: React.FC<Partial<TableRowTypeMap> & CN> = ({ children, sx, ...rest }) => (
   <MuiTableRow
-    component='div'
-    role='row'
+    component="div"
+    role="row"
     sx={[
       {
         color: 'inherit',
@@ -210,8 +210,8 @@ export const TableRow: React.FC<Partial<TableRowTypeMap> & CN> = ({ children, sx
 
 export const TableCell: React.FC<Partial<TableCellProps> & CN> = ({ children, sx, ...rest }) => (
   <MuiTableCell
-    component='div'
-    role='cell'
+    component="div"
+    role="cell"
     sx={[
       (theme) => ({
         padding: '8px 16px',
@@ -256,7 +256,7 @@ export const HeaderCheckbox = React.memo(
       backgroundColor: 'transparent',
     },
   }),
-  areEqual
+  areEqual,
 )
 
 export const RowCheckbox = React.memo(
@@ -272,7 +272,7 @@ export const RowCheckbox = React.memo(
       height: 24,
     },
   }),
-  areEqual
+  areEqual,
 )
 
 export const ResizeHandle = <T extends RowData>({ header }: { header: Header<T, unknown> }): ReactElement => {

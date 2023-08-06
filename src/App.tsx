@@ -67,9 +67,9 @@ function SelectColumnFilter({
       onChange={(e) => {
         setFilterValue(e.target.value || undefined)
       }}
-      variant='standard'
+      variant="standard"
     >
-      <MenuItem value=''>All</MenuItem>
+      <MenuItem value="">All</MenuItem>
       {options.map((option, i) => (
         <MenuItem key={i} value={option}>
           {option}
@@ -108,7 +108,7 @@ function SliderColumnFilter({
       <TextField
         name={id}
         label={columnDef.header as string}
-        type='range'
+        type="range"
         inputProps={{
           min,
           max,
@@ -117,9 +117,9 @@ function SliderColumnFilter({
         onChange={(e) => {
           setFilterValue(parseInt(e.target.value, 10))
         }}
-        variant='standard'
+        variant="standard"
       />
-      <Button variant='outlined' style={{ width: 60, height: 36 }} onClick={() => setFilterValue(undefined)}>
+      <Button variant="outlined" style={{ width: 60, height: 36 }} onClick={() => setFilterValue(undefined)}>
         Off
       </Button>
     </div>
@@ -171,7 +171,7 @@ function NumberRangeColumnFilter({
         <TextField
           id={`${id}_1`}
           value={columnFilterValue[0] || ''}
-          type='number'
+          type="number"
           onChange={(e) => {
             const val = e.target.value
             setFilterValue((old: [number, number]) => [val ? parseInt(val, 10) : undefined, old[1]])
@@ -181,13 +181,13 @@ function NumberRangeColumnFilter({
             width: '70px',
             marginRight: '0.5rem',
           }}
-          variant='standard'
+          variant="standard"
         />
         to
         <TextField
           id={`${id}_2`}
           value={columnFilterValue[1] || ''}
-          type='number'
+          type="number"
           onChange={(e) => {
             const val = e.target.value
             setFilterValue((old: [number, number]) => [old[0], val ? parseInt(val, 10) : undefined])
@@ -197,7 +197,7 @@ function NumberRangeColumnFilter({
             width: '70px',
             marginLeft: '0.5rem',
           }}
-          variant='standard'
+          variant="standard"
         />
       </div>
     </>
@@ -282,16 +282,16 @@ const App: React.FC = () => {
         instance
           .getSelectedRowModel()
           .flatRows.map((v) => `'${v.original.firstName} ${v.original.lastName}'`)
-          .join(', ')
+          .join(', '),
       )
     },
-    []
+    [],
   )
 
   return (
     <Page>
       <CssBaseline />
-      <Table<Person> name='testTable' columns={columns} data={data} onAdd={dummy} onEdit={dummy} onDelete={dummy} />
+      <Table<Person> name="testTable" columns={columns} data={data} onAdd={dummy} onEdit={dummy} onDelete={dummy} />
     </Page>
   )
 }

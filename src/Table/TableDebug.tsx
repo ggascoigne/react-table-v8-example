@@ -14,7 +14,7 @@ export const useDebugIsOpen = () => useAtom(debugIsOpen)
 export const TableDebugButton: React.FC<{ enabled: boolean; instance: any }> = ({ enabled, instance }) => {
   const [, setOpen] = useDebugIsOpen()
   return enabled ? (
-    <Tooltip title='Debug'>
+    <Tooltip title="Debug">
       <div style={{ position: 'relative' }}>
         <IconButton
           sx={[
@@ -27,7 +27,7 @@ export const TableDebugButton: React.FC<{ enabled: boolean; instance: any }> = (
             },
           ]}
           onClick={() => setOpen((old) => !old)}
-          size='large'
+          size="large"
         >
           <BugReportTwoToneIcon />
         </IconButton>

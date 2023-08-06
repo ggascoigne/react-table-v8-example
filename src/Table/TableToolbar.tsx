@@ -32,7 +32,7 @@ export const LabeledActionButton = <T extends RowData>({
   label,
   enabled = () => true,
 }: ActionButton<T>): ReactElement => (
-  <Button variant='outlined' color='primary' onClick={onClick(table)} disabled={!enabled(table)}>
+  <Button variant="outlined" color="primary" onClick={onClick(table)} disabled={!enabled(table)}>
     {icon}
     &nbsp;
     {label}
@@ -68,7 +68,7 @@ export const SmallIconActionButton = <T extends RowData>({
         ]}
         onClick={onClick(table)}
         disabled={!enabled(table)}
-        size='large'
+        size="large"
       >
         {icon}
       </IconButton>
@@ -112,7 +112,7 @@ export function TableToolbar<T extends RowData>({
       setAnchorEl(event.currentTarget)
       setColumnsOpen(true)
     },
-    [setAnchorEl, setColumnsOpen]
+    [setAnchorEl, setColumnsOpen],
   )
 
   const handleFilterClick = useCallback(
@@ -120,7 +120,7 @@ export function TableToolbar<T extends RowData>({
       setAnchorEl(event.currentTarget)
       setFilterOpen(true)
     },
-    [setAnchorEl, setFilterOpen]
+    [setAnchorEl, setFilterOpen],
   )
 
   function handleClose() {
@@ -143,9 +143,9 @@ export function TableToolbar<T extends RowData>({
             table={table}
             icon={<AddIcon />}
             onClick={onAdd}
-            label='Add'
+            label="Add"
             enabled={(t: Table<T>) => !t.getIsSomeRowsSelected()}
-            variant='left'
+            variant="left"
           />
         )}
         {onEdit && (
@@ -153,9 +153,9 @@ export function TableToolbar<T extends RowData>({
             table={table}
             icon={<CreateIcon />}
             onClick={onEdit}
-            label='Edit'
+            label="Edit"
             enabled={({ getState }: Table<T>) => Object.keys(getState().rowSelection ?? {}).length === 1}
-            variant='left'
+            variant="left"
           />
         )}
         {onDelete && (
@@ -163,9 +163,9 @@ export function TableToolbar<T extends RowData>({
             table={table}
             icon={<DeleteIcon />}
             onClick={onDelete}
-            label='Delete'
+            label="Delete"
             enabled={(t: Table<T>) => t.getIsSomeRowsSelected()}
-            variant='left'
+            variant="left"
           />
         )}
         {extraCommands.map((c) => {
@@ -178,7 +178,7 @@ export function TableToolbar<T extends RowData>({
               onClick={c.onClick}
               label={c.label}
               enabled={c.enabled}
-              variant='left'
+              variant="left"
             />
           ) : (
             <LabeledActionButton<T>
@@ -200,8 +200,8 @@ export function TableToolbar<T extends RowData>({
             table={table}
             icon={<CachedIcon />}
             onClick={() => onRefresh}
-            label='Refresh Table'
-            variant='right'
+            label="Refresh Table"
+            variant="right"
           />
         )}
         {hidableColumns.length > 1 && (
@@ -209,16 +209,16 @@ export function TableToolbar<T extends RowData>({
             table={table}
             icon={<ViewColumnsIcon />}
             onClick={() => handleColumnsClick}
-            label='Show / hide columns'
-            variant='right'
+            label="Show / hide columns"
+            variant="right"
           />
         )}
         <SmallIconActionButton<T>
           table={table}
           icon={<FilterListIcon />}
           onClick={() => handleFilterClick}
-          label='Filter by columns'
-          variant='right'
+          label="Filter by columns"
+          variant="right"
         />
       </div>
     </Toolbar>

@@ -89,7 +89,7 @@ function DefaultColumnFilter<T extends RowData>({ table, column }: FilterRenderP
       InputLabelProps={{ htmlFor: id }}
       value={value}
       autoFocus={isFirstColumn}
-      variant='standard'
+      variant="standard"
       onChange={handleChange}
       onBlur={(e) => {
         const _value = e.target.value || undefined
@@ -152,7 +152,7 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
         />
       ),
     }),
-    []
+    [],
   )
 
   const columns = useMemo(() => [selectionColumn, ...userColumns], [selectionColumn, userColumns])
@@ -171,7 +171,7 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
       minSize: 50,
       size: 200,
     }),
-    []
+    [],
   )
 
   const [initialState, setInitialState] = useInitialTableState(`tableState:${name}`, columns, {
@@ -217,7 +217,7 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
         cell.column.id !== '_selector' &&
         onClick(cell.row)
     },
-    [onClick]
+    [onClick],
   )
 
   const headerGroups = table.getHeaderGroups()
@@ -256,7 +256,7 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
                       <>
                         {/* I only want the leaves of columns to show grouping */}
                         {header.column.getCanGroup() && headerGroup.depth + 1 === headerGroups.length && (
-                          <Tooltip title='Toggle Grouping'>
+                          <Tooltip title="Toggle Grouping">
                             <TableSortLabel
                               active
                               direction={header.column.getIsGrouped() ? 'desc' : 'asc'}
@@ -274,7 +274,7 @@ export function Table<T extends RowData>(props: TableProps<T>): ReactElement {
                           </Tooltip>
                         )}
                         {header.column.getCanSort() ? (
-                          <Tooltip title='Toggle Sort'>
+                          <Tooltip title="Toggle Sort">
                             <TableSortLabel
                               active={!!header.column.getIsSorted()}
                               direction={header.column.getIsSorted() || 'asc'}

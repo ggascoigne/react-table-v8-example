@@ -37,7 +37,7 @@ export function FilterChipBar<T extends RowData>({ table }: FilterChipBarProps<T
       }}
     >
       <Box
-        component='span'
+        component="span"
         sx={{
           color: '#998',
           fontSize: '14px',
@@ -63,7 +63,7 @@ export function FilterChipBar<T extends RowData>({ table }: FilterChipBarProps<T
                   label={
                     <>
                       <Box
-                        component='span'
+                        component="span"
                         sx={{
                           fontWeight: 500,
                           marginRight: '5px',
@@ -75,7 +75,7 @@ export function FilterChipBar<T extends RowData>({ table }: FilterChipBarProps<T
                     </>
                   }
                   onDelete={() => handleDelete(column)}
-                  variant='outlined'
+                  variant="outlined"
                 />
               )
             )
